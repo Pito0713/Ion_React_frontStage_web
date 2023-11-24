@@ -1,5 +1,4 @@
-import LogInPage from "../LogInPage";
-import MainPage from "../MainPage";
+import LogInPage from "../pages/LogInPage";
 
 export const useAppPages = () => {
   return [
@@ -11,9 +10,5 @@ export const useAppPages = () => {
       path: "/logInPage",
       element: <LogInPage />,
     },
-    {
-      path: "/mainPage",
-      element: <MainPage />,
-    },
-  ];
+  ]
 };

@@ -1,11 +1,8 @@
 import RootRouter from "./router/RootRouter";
+
 function App() {
   return (
-
-
-          <RootRouter />
-
-
+    <RootRouter />
   );
 }
 

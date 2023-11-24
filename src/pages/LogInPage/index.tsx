@@ -1,51 +1,106 @@
-import * as RN from "react"
+import * as React from 'react';
+import cookie from 'react-cookies';
+import { CookieSerializeOptions } from "cookie";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom"
-function LogInPage() {
+
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#9052cc',
+    },
+    secondary: {
+      main: '#ffffff',
+    },
+  },
+});
+
+export default function LogInPage() {
   let navigate = useNavigate()
-  const age = RN.useRef<HTMLInputElement | null>(null);
-  const userName = RN.useRef<HTMLInputElement | null>(null);;
-  const [sex, sexSet] = RN.useState<Number>(1);
-
-  const handleSelectChange = (event: RN.ChangeEvent<HTMLSelectElement>) => {
-    age.current = event.target.value as unknown as HTMLInputElement;
-  };
-  const submit = () => {
-    console.log(userName.current?.value)
-    console.log(sex)
-    console.log(age.current)
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const options: CookieSerializeOptions = { /* options */ };
+    cookie.save("account",data.get('account') as string ,options);
+    cookie.save("password",data.get('password') as string,options);
     navigate('/mainPage')
-  }
+  };
+
   return (
-    <>
-    <div>
-      <label>userName:</label>
-      <input name="userName" id="userName" type="text" ref={userName} placeholder="enter" />
-
-      <div >
-        <input type="radio" id="huey" name="drone" value={1} checked onChange={()=>sexSet(1)}/>
-        <label >男</label>
-      </div>
-      <div >
-        <input type="radio" id="dewey" name="drone" value={2} onChange={()=>sexSet(2)} />
-        <label >女</label>
-      </div>
-
-      <label>Age:</label>
-      <select
-        style={{ width: 150,height:50 }}
-        onChange={(e)=>handleSelectChange(e)}
-      >
-        <option key={1} value={1}>
-          1
-        </option>
-        <option key={2} value={2}>
-          2
-        </option>
-      </select>
-      </div>
-      <button onClick={()=>submit()}>5555</button>
-    </>
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main">
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography 
+            component="h1" 
+            variant="h4" 
+            sx={{
+              margin: 4,
+            }}
+          >
+            登入
+          </Typography>
+          <Box
+            component="form" 
+            onSubmit={handleSubmit}  
+            sx={{
+              padding: 4,
+              bgcolor: 'secondary.main'
+            }}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="account"
+              label="Account"
+              id="account"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ padding: 1.5, bgcolor: 'primary.main', mb: 2}}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+                <Link href="#" >
+                  Forgot password? & Don't have an account? Sign Up
+                </Link>
+            </Grid>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
-
-export default LogInPage;
