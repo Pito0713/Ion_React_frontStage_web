@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import { useAppPages } from "../hooks/useAppPages";
 import { useMainPages } from "../hooks/useMainPages";
-import { BrowserRouter } from "react-router-dom";
 import MainPage from '../pages';
 
 export const RootRouter: React.FC<any> = ({}) => {
 
   const AuthedPage = () => {
     return (
-      <BrowserRouter basename="/ion-react-backstage-web">
+      <HashRouter>
         <Routes>
           {useAppPages().map((el) => (
             <Route path={el.path} element={el.element} key={el.path} />
@@ -20,7 +19,7 @@ export const RootRouter: React.FC<any> = ({}) => {
             ))}
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     );
   };
 
