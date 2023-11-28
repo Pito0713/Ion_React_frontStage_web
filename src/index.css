@@ -7,6 +7,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
+  --primary-color:#b3b3b3;
+  --background-color:#eeeeee;
+
   --text-color:#2f312e;
 }
 
@@ -26,7 +29,9 @@ body {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
+  background-color: var(--background-color);
 }
+
 
 html {
   overflow-y: scroll;

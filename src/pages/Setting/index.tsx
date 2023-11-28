@@ -10,7 +10,7 @@ import DraftsIcon from '@mui/icons-material/Drafts';
 
  function Setting() {
   return (
-    <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+    <Box>
       <nav aria-label="main mailbox folders">
         <List>
           <ListItem disablePadding>
