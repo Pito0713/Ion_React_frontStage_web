@@ -1,25 +1,23 @@
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { useMENU_LIST } from '../configs/site'
 const drawerWidth = 240;
-
-const pages = ['/mainPage/tablePage', '/mainPage/settingPage'];
+const pages = ['tablePage', {'settingPage': ['addAdmin','adminPermissions','changePassWord']}];
 
 interface Props {
   /**
@@ -40,24 +38,48 @@ export default function ResponsiveDrawer(props: Props) {
    const handleCloseNavMenu = (page: string) => {
     navigate(page);
   };
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   const drawer = (
     <div>
       <Toolbar />
-       <Divider />
+      <Divider />
       <List>
-        {pages.map((page, index) => (
-          <ListItem key={index} disablePadding>
-            <ListItemButton key={page}
-                onClick={()=>handleCloseNavMenu(page as string)}
-                sx={{ my: 2, color: 'block', display: 'block' }}>
-                  {page}
-        
-            </ListItemButton>
-          </ListItem>
+        {useMENU_LIST().map((page, index) => (
+          typeof page === 'object' && page !== null ?
+            <ListItem key={index} disablePadding>
+              <ListItemButton key={page.code}
+                  onClick={()=>handleCloseNavMenu(page.route as string)}
+                  sx={{ my: 2, color: 'block', display: 'block' }}>
+                    <ListItemText primary={page.name} />
+              </ListItemButton>
+            </ListItem>
+          :
+            <div>
+              <ListItemButton onClick={handleClick}>
+                <ListItemText primary={Object.keys(page)} />
+                  {open ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {Object.values(page)[0].map((item, index) => (
+                    <ListItemButton 
+                        key={item.code}
+                        onClick={()=>handleCloseNavMenu(item.route as string)}
+                        sx={{ pl: 4 }}>
+      
+                          <ListItemText primary={item.name} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
+            </div>
         ))}
       </List>
-
     </div>
   );
 
