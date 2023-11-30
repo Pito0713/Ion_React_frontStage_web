@@ -1,5 +1,5 @@
-import BarChart from './barChart';
-import PieChart from './pieChart';
+import BarChart from './BarChart';
+import PieChart from './PieChart';
 import ScatterChart from './ScatterChart';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -32,13 +33,19 @@ const rows = [
   createData('Cupcake', 305, 3.7, 67, 4.3),
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
+interface Props {
+  window?: () => Window;
+}
+export default function TablePage(props: Props) {
 
-export default function TablePage() {
+  const { window } = props;
+  const container = window !== undefined ? () => window().document.body : undefined;
+  console.log(container)
   return (
 
-      <Box>
+      <Box  >
    
-      <Grid container spacing={3} style={{marginBottom: 21}}>
+      <Grid container direction={{md:'row' , xs: 'column'}} spacing={3} style={{marginBottom: 21 }}>
         <Grid item xs>
           <Card style={{ height: 150 }}>123</Card>
         </Grid>
@@ -50,14 +57,14 @@ export default function TablePage() {
         </Grid>
       </Grid>
       <Box>
-        <Grid container spacing={3}>
-          <Grid item xs={2}>
+        <Grid container spacing={3} direction={{md:'row' , xs: 'column'}} style={{marginBottom: 21 }}>
+          <Grid item xs={4} md={3}>
             <PieChart />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={4} md={5}>
             <BarChart />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={4} md={4}>
             <ScatterChart />
           </Grid>
         </Grid>

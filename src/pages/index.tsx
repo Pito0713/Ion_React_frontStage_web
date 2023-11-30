@@ -1,102 +1,89 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
+import * as mui from "@mui/material";
+
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
-import Collapse from '@mui/material/Collapse';
+
+import MenuIcon from '@mui/icons-material/Menu';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useMENU_LIST } from '../configs/site'
-const drawerWidth = 240;
-const pages = ['tablePage', {'settingPage': ['addAdmin','adminPermissions','changePassWord']}];
+
+const drawerWidth = 200;
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
   window?: () => Window;
 }
 
-export default function ResponsiveDrawer(props: Props) {
+export default function TablePage(props: Props) {
   let navigate = useNavigate()
   const { window } = props;
+  const container = window !== undefined ? () => window().document.body : undefined;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-   const handleCloseNavMenu = (page: string) => {
+  const handleCloseNavMenu = (page: string) => {
     navigate(page);
   };
-  const [open, setOpen] = React.useState(false);
 
+  const [open, setOpen] = React.useState(false);
   const handleClick = () => {
     setOpen(!open);
   };
+  
 
   const drawer = (
     <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {useMENU_LIST().map((page, index) => (
-          typeof page === 'object' && page !== null ?
-            <ListItem key={index} disablePadding>
-              <ListItemButton key={page.code}
-                  onClick={()=>handleCloseNavMenu(page.route as string)}
-                  sx={{ my: 2, color: 'block', display: 'block' }}>
-                    <ListItemText primary={page.name} />
-              </ListItemButton>
-            </ListItem>
-          :
-            <div>
-              <ListItemButton onClick={handleClick}>
-                <ListItemText primary={Object.keys(page)} />
+      <mui.Toolbar />
+      <mui.Divider />
+      <mui.List>
+        {useMENU_LIST().map((page) => (
+          <div>
+            {Object.values(page)[0].length > 1  ?
+              <mui.ListItemButton onClick={handleClick}>
+                <mui.ListItemText primary={Object.keys(page)} />
                   {open ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {Object.values(page)[0].map((item, index) => (
-                    <ListItemButton 
+              </mui.ListItemButton>
+              :
+              Object.values(page)[0].map((item: any) => (
+                <mui.ListItem key={item.code} disablePadding>
+                  <mui.ListItemButton key={item.code}
+                      onClick={()=>handleCloseNavMenu(item.route as string)}
+                      sx={{ my: 2, color: 'block', display: 'block' }}>
+                        <mui.ListItemText primary={item.name} />
+                  </mui.ListItemButton>
+                </mui.ListItem>
+              ))}
+              {Object.values(page)[0].length > 1  &&
+                <mui.Collapse in={open} timeout="auto" unmountOnExit>
+                  <mui.List component="div" disablePadding>
+                    {Object.values(page)[0].map((item: any) => (
+                      <mui.ListItemButton
                         key={item.code}
                         onClick={()=>handleCloseNavMenu(item.route as string)}
                         sx={{ pl: 4 }}>
-      
-                          <ListItemText primary={item.name} />
-                    </ListItemButton>
-                  ))}
-                </List>
-              </Collapse>
+                          <mui.ListItemText primary={item.name} />
+                      </mui.ListItemButton>
+                    ))}
+                  </mui.List>
+                </mui.Collapse>
+              }
             </div>
         ))}
-      </List>
+      </mui.List>
     </div>
   );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
-
   return (
-    <Box sx={{ display: 'flex' }}>
-       <AppBar
+    <mui.Box sx={{ display: 'flex' }}>
+      <mui.AppBar
         color="inherit"
         position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
       >
-        <Toolbar>
-          <IconButton
+        <mui.Toolbar>
+          <mui.IconButton
             color="primary"
             aria-label="open drawer"
             edge="start"
@@ -104,23 +91,21 @@ export default function ResponsiveDrawer(props: Props) {
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
             <MenuIcon />
-          </IconButton>
-  
-        </Toolbar>
-      </AppBar>
-      <Box
+          </mui.IconButton>
+        </mui.Toolbar>
+      </mui.AppBar>
+      <mui.Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
+        <mui.Drawer
           container={container}
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true, 
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
@@ -128,8 +113,8 @@ export default function ResponsiveDrawer(props: Props) {
           }}
         >
           {drawer}
-        </Drawer>
-        <Drawer
+        </mui.Drawer>
+        <mui.Drawer
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
@@ -138,15 +123,15 @@ export default function ResponsiveDrawer(props: Props) {
           open
         >
           {drawer}
-        </Drawer>
-      </Box>
-      <Box
+        </mui.Drawer>
+      </mui.Box>
+      <mui.Box
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
-        <Toolbar />
+        <mui.Toolbar />
         <Outlet></Outlet>
-    </Box>
-    </Box>
+      </mui.Box>
+    </mui.Box>
   );
 }
